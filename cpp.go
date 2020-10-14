@@ -92,9 +92,13 @@ func captureOutput(r *Request) error {
 
 	log.Println("Running", r.Outfile)
 
+	r.StartedAt = time.Now().UTC()
+
 	cmd := exec.Command(fmt.Sprintf("./%s", r.Outfile))
 
 	out, err := cmd.CombinedOutput()
+
+	r.CompletedAt = time.Now().UTC()
 
 	if err != nil {
 		return err
@@ -105,8 +109,6 @@ func captureOutput(r *Request) error {
 }
 
 func processCpp(request *Request) error {
-
-	request.StartedAt = time.Now().UTC()
 
 	err := createFile(request)
 
@@ -135,8 +137,6 @@ func processCpp(request *Request) error {
 	}
 
 	request.Status = 2
-
-	request.CompletedAt = time.Now().UTC()
 
 	err = updateStatus(request)
 
